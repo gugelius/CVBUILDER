@@ -108,26 +108,52 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
     }
     //todo
     // загрузка файла в БД
+//    @Override
+//    public boolean uploadFile(String login, InputStream fileContent) {
+//        boolean uploadSuccess = false;
+//        Connection connection = null;
+//        try {
+//            connection = connectionPool.getConnection();
+//            PreparedStatement statement = connection.prepareStatement(INSERT_FILE);
+//            statement.setBlob(1, fileContent);
+//            statement.setString(2, login);
+//            int rowsUpdated = statement.executeUpdate();
+//            if (rowsUpdated > 0) {
+//                uploadSuccess = true;
+//            }
+//        } catch (SQLException throwables) {
+//            throwables.printStackTrace();
+//        } finally {
+//            connectionPool.releaseConnection(connection);
+//        }
+//        return uploadSuccess;
+//    }
     @Override
     public boolean uploadFile(String login, InputStream fileContent) {
         boolean uploadSuccess = false;
         Connection connection = null;
         try {
             connection = connectionPool.getConnection();
+            if (connection == null) {
+                System.out.println("Не удалось установить соединение с базой данных");
+                return false;
+            }
             PreparedStatement statement = connection.prepareStatement(INSERT_FILE);
             statement.setBlob(1, fileContent);
             statement.setString(2, login);
-            int rowsInserted = statement.executeUpdate();
-            if (rowsInserted > 0) {
+            int rowsUpdated = statement.executeUpdate();
+            if (rowsUpdated > 0) {
                 uploadSuccess = true;
             }
         } catch (SQLException throwables) {
+            System.out.println("Произошла ошибка при выполнении SQL-запроса");
             throwables.printStackTrace();
         } finally {
             connectionPool.releaseConnection(connection);
         }
         return uploadSuccess;
     }
+
     @Override
     public byte[] downloadFile(String login) {
         byte[] fileBytes = null;

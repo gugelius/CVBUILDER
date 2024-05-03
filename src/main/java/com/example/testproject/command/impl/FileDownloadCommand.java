@@ -24,12 +24,15 @@ public class FileDownloadCommand implements Command {
                 response.getOutputStream().write(fileBytes);
             } else {
                 // Обработать ошибку
-                return "main.jsp";
+                request.setAttribute("errorMessage", "Файл не найден");
+                return "pages/main.jsp";
             }
         } catch (IOException e) {
             // Обработать исключение
-            return "main.jsp";
+            request.setAttribute("errorMessage", "Произошла ошибка при чтении файла");
+            return "pages/main.jsp";
         }
         return null;
     }
+
 }
