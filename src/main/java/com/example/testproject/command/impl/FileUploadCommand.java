@@ -11,34 +11,7 @@ import jakarta.servlet.http.Part;
 import java.io.IOException;
 import java.io.InputStream;
 
-//public class FileUploadCommand implements Command {
-//    @Override
-//    public String execute(HttpServletRequest request, HttpServletResponse response) {
-//        try {
-//            Part filePart = request.getPart("file"); // Получает загруженный файл
-//            InputStream inputStream = filePart.getInputStream();
-////            String login = (String) request.getSession().getAttribute("user"); // Получает логин пользователя из сессии
-//            HttpSession session = request.getSession();
-//            String login = (String) session.getAttribute("user");
-//
-//            UserServiceImpl userService = UserServiceImpl.getInstance();
-//            boolean uploadSuccess = userService.uploadFile(login, inputStream);
-//
-//            if (uploadSuccess) {
-//                // Вернуть страницу, которая будет отображена после успешной загрузки
-//                request.setAttribute("user","success");
-//                return "pages/main.jsp";
-//            } else {
-//                // Обработать ошибку
-//                request.setAttribute("user","failed");
-//                return "pages/main.jsp";
-//            }
-//        } catch (IOException | ServletException e) {
-//            // Обработать исключение
-//            return "index.jsp";
-//        }
-//    }
-//}
+//todo тест с форматом файла
 public class FileUploadCommand implements Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
@@ -53,6 +26,7 @@ public class FileUploadCommand implements Command {
                 System.out.println("Не удалось получить InputStream файла");
                 return "index.jsp";
             }
+            String fileExtension = getFileExtension(filePart.getSubmittedFileName()); // Получает расширение файла
             HttpSession session = request.getSession();
             String login = (String) session.getAttribute("user");
             if (login == null) {
@@ -60,7 +34,7 @@ public class FileUploadCommand implements Command {
                 return "index.jsp";
             }
             UserServiceImpl userService = UserServiceImpl.getInstance();
-            boolean uploadSuccess = userService.uploadFile(login, inputStream);
+            boolean uploadSuccess = userService.uploadFile(login, inputStream, fileExtension);
 
             if (uploadSuccess) {
                 request.setAttribute("user","success");
@@ -75,5 +49,15 @@ public class FileUploadCommand implements Command {
             return "index.jsp";
         }
     }
+
+    private String getFileExtension(String fileName) {
+        int dotIndex = fileName.lastIndexOf(".");
+        if (dotIndex >= 0) {
+            return fileName.substring(dotIndex + 1);
+        } else {
+            return "";
+        }
+    }
 }
+
 

@@ -1,4 +1,6 @@
 package com.example.testproject.service;
+import com.example.testproject.entity.UserFile;
+
 import java.io.InputStream;
 
 public interface UserService {
@@ -8,7 +10,6 @@ public interface UserService {
     boolean updateProfile(String login, String oldPassword, String newLogin, String newPassword);
     //todo
     // загрузка файла в БД
-    boolean uploadFile(String login, InputStream fileContent);
-
-    byte[] downloadFile(String login);
+    boolean uploadFile(String login, InputStream fileContent, String fileExtension);
+    UserFile downloadFile(String login); // Изменено на UserFile
 }

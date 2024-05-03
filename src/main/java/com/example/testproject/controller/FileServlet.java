@@ -18,16 +18,6 @@ public class FileServlet extends HttpServlet{
     public void init() {
 
     }
-//    @Override
-//    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        String commandStr = request.getParameter("command");
-//        if (commandStr != null) {
-//            Command command = CommandType.define(commandStr);
-//            command.execute(request, response);
-//        } else {
-//            // Обработайте ситуацию, когда commandStr равно null
-//        }
-//    }
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         response.setContentType("text/html");
@@ -40,8 +30,6 @@ public class FileServlet extends HttpServlet{
             request.getRequestDispatcher(page).forward(request, response);
         }
     }
-
-
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String commandStr = request.getParameter("command");
@@ -63,44 +51,6 @@ public class FileServlet extends HttpServlet{
     }
     public void destroy() {
     }
+
 }
-//@WebServlet("/fileServlet")
-//@MultipartConfig
-//public class FileServlet extends HttpServlet{
-//    public void init() {
-//
-//    }
-//    @Override
-//    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        processRequest(request, response);
-//    }
-//
-//    @Override
-//    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        processRequest(request, response);
-//    }
-//
-//    private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        String commandStr = request.getParameter("command");
-//        if (commandStr == null) {
-//            Part commandPart = request.getPart("command");
-//            if (commandPart != null) {
-//                BufferedReader reader = new BufferedReader(new InputStreamReader(commandPart.getInputStream(), StandardCharsets.UTF_8));
-//                commandStr = reader.readLine();
-//            }
-//        }
-//
-//        if (commandStr != null) {
-//            Command command = CommandType.define(commandStr);
-//            String page = command.execute(request, response);
-//            if (page != null) {
-//                request.getRequestDispatcher(page).forward(request, response);
-//            }
-//        } else {
-//            // Обработайте ситуацию, когда commandStr все еще null
-//        }
-//    }
-//
-//    public void destroy() {
-//    }
-//}
+

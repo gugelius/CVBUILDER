@@ -3,6 +3,7 @@ package com.example.testproject.dao.impl;
 import com.example.testproject.dao.BaseDao;
 import com.example.testproject.dao.UserDao;
 import com.example.testproject.entity.User;
+import com.example.testproject.entity.UserFile;
 
 import java.sql.*;
 import java.util.List;
@@ -15,8 +16,8 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
     private static final String SELECT_LOGIN_PASSWORD = "SELECT password  FROM users WHERE login=?";
     private  static  final  String INSERT_NEW_USER = "INSERT INTO users (login, password) VALUES (?, ?)";
     private static final String UPDATE_USER = "UPDATE users SET login = ?, password = ? WHERE login = ?";
-    private static final String INSERT_FILE = "UPDATE users SET file = ? WHERE login = ?";
-    private static final String SELECT_FILE = "SELECT file FROM users WHERE login = ?";
+    private static final String INSERT_FILE = "UPDATE users SET file = ?, file_extension = ? WHERE login = ?";
+    private static final String SELECT_FILE = "SELECT file, file_extension FROM users WHERE login = ?";
     private static UserDaoImpl instance = new UserDaoImpl();
     private UserDaoImpl() {
     }
@@ -106,30 +107,10 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
         }
         return update;
     }
-    //todo
-    // загрузка файла в БД
-//    @Override
-//    public boolean uploadFile(String login, InputStream fileContent) {
-//        boolean uploadSuccess = false;
-//        Connection connection = null;
-//        try {
-//            connection = connectionPool.getConnection();
-//            PreparedStatement statement = connection.prepareStatement(INSERT_FILE);
-//            statement.setBlob(1, fileContent);
-//            statement.setString(2, login);
-//            int rowsUpdated = statement.executeUpdate();
-//            if (rowsUpdated > 0) {
-//                uploadSuccess = true;
-//            }
-//        } catch (SQLException throwables) {
-//            throwables.printStackTrace();
-//        } finally {
-//            connectionPool.releaseConnection(connection);
-//        }
-//        return uploadSuccess;
-//    }
+
+    //todo тест загрузки в бд, но с форматом
     @Override
-    public boolean uploadFile(String login, InputStream fileContent) {
+    public boolean uploadFile(String login, InputStream fileContent, String fileExtension) {
         boolean uploadSuccess = false;
         Connection connection = null;
         try {
@@ -140,7 +121,9 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
             }
             PreparedStatement statement = connection.prepareStatement(INSERT_FILE);
             statement.setBlob(1, fileContent);
-            statement.setString(2, login);
+            statement.setString(2, fileExtension);
+            statement.setString(3, login);
+
             int rowsUpdated = statement.executeUpdate();
             if (rowsUpdated > 0) {
                 uploadSuccess = true;
@@ -154,9 +137,11 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
         return uploadSuccess;
     }
 
+    //todo с расширением
     @Override
-    public byte[] downloadFile(String login) {
+    public UserFile downloadFile(String login) {
         byte[] fileBytes = null;
+        String fileExtension = null;
         Connection connection = null;
         try {
             connection = connectionPool.getConnection();
@@ -165,14 +150,19 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 Blob fileBlob = resultSet.getBlob("file");
-                fileBytes = fileBlob.getBytes(1, (int) fileBlob.length());
+                if (fileBlob != null) {
+                    fileBytes = fileBlob.getBytes(1, (int) fileBlob.length());
+                    fileExtension = resultSet.getString("file_extension"); // Получает расширение файла из базы данных
+                }
+            } else {
+                System.out.println("Не удалось найти файл для пользователя: " + login);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         } finally {
             connectionPool.releaseConnection(connection);
         }
-        return fileBytes;
+        return new UserFile(fileBytes, fileExtension); // Возвращает объект UserFile, содержащий байты файла и его расширение
     }
 }
 

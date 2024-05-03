@@ -19,9 +19,9 @@ public class LocaleOverrideFilter implements Filter {
         if (session != null) {
             String sessionLocale = (String) session.getAttribute("jlocale");
             if (sessionLocale == null) {
-                Locale locale = new Locale("pl");
+                Locale locale = new Locale("ru");
 //                httpRequest.setAttribute("org.apache.catalina.core.DISPATCHER_REQUEST_LOCALE", locale);
-                session.setAttribute("jlocale","pl");
+                session.setAttribute("jlocale","ru");
             }
         }
         chain.doFilter(request, response);

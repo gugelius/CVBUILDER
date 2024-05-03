@@ -1,6 +1,7 @@
 package com.example.testproject.service.impl;
 
 import com.example.testproject.dao.impl.UserDaoImpl;
+import com.example.testproject.entity.UserFile;
 import com.example.testproject.service.UserService;
 
 import java.security.MessageDigest;
@@ -77,12 +78,13 @@ public class UserServiceImpl implements UserService {
     //todo
     // загрузка файла в бд
     @Override
-    public boolean uploadFile(String login, InputStream fileContent) {
+    public boolean uploadFile(String login, InputStream fileContent, String fileExtension) {
         UserDaoImpl userDao = UserDaoImpl.getInstance();
-        return userDao.uploadFile(login, fileContent);
+        return userDao.uploadFile(login, fileContent, fileExtension);
     }
+
     @Override
-    public byte[] downloadFile(String login) {
+    public UserFile downloadFile(String login) { // Изменено на UserFile
         UserDaoImpl userDao = UserDaoImpl.getInstance();
         return userDao.downloadFile(login);
     }
