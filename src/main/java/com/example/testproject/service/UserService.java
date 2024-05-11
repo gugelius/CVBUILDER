@@ -4,6 +4,7 @@ import com.example.testproject.entity.UserFile;
 import java.io.InputStream;
 
 public interface UserService {
+    String createJWT(String id, String issuer, String subject, long ttlMillis);
     boolean validation(String password);
     boolean authentificate(String login, String password);
     boolean register(String login, String password);

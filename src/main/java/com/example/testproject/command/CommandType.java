@@ -4,13 +4,13 @@ import com.example.testproject.command.impl.*;
 
 public enum CommandType {
     ADD_USER(new AddUserCommand()),
-    LOGIN(new LoginCommand()),
-    LOGOUT(new LogoutCommand() ),
-    DEFAULT(new DefaultCommand()),
-    CHANGE_PROFILE(new ChangeProfileCommand()),
-    SETLOCALE(new SetLocaleCommand()),
-    FILE_UPLOAD(new FileUploadCommand()),
-    FILE_DOWNLOAD(new FileDownloadCommand());
+    LOGIN(new LoginCommand());
+//    LOGOUT(new LogoutCommand() ),
+//    DEFAULT(new DefaultCommand()),
+//    CHANGE_PROFILE(new ChangeProfileCommand()),
+//    SETLOCALE(new SetLocaleCommand()),
+//    FILE_UPLOAD(new FileUploadCommand()),
+//    FILE_DOWNLOAD(new FileDownloadCommand());
     Command command;
     CommandType(Command command) {
         this.command = command;

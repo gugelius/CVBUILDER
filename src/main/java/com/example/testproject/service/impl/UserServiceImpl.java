@@ -3,7 +3,13 @@ package com.example.testproject.service.impl;
 import com.example.testproject.dao.impl.UserDaoImpl;
 import com.example.testproject.entity.UserFile;
 import com.example.testproject.service.UserService;
-
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
+import javax.crypto.spec.SecretKeySpec;
+import java.util.Base64;
+import java.security.Key;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -12,7 +18,6 @@ import java.io.InputStream;
 public class UserServiceImpl implements UserService {
     private  static final int PAS_LEN = 4;
     private static UserServiceImpl instance = new UserServiceImpl();
-
     public static UserServiceImpl getInstance() {
         return instance;
     }
@@ -21,6 +26,30 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    public String createJWT(String id, String issuer, String subject, long ttlMillis) {
+        SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
+
+        long nowMillis = System.currentTimeMillis();
+        Date now = new Date(nowMillis);
+
+        // Замените "your_secret_key" на ваш секретный ключ
+        String secretKey = "c3VwZXIgcHVwZXIgZHVwZXIgbWVnYSB1bHRyYSBzZWNyZXQgZ2lnYSBrZXk=";
+        byte[] apiKeySecretBytes = secretKey.getBytes(StandardCharsets.UTF_8);
+        Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
+
+        return Jwts.builder()
+                .setId(id)
+                .setIssuedAt(now)
+                .setSubject(subject)
+                .setIssuer(issuer)
+                .signWith(signatureAlgorithm, signingKey)
+                .compact();
+    }
+
+
+
+
+//todo закинуть хеширование в пакет утилит
     private String md5(String password) {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
