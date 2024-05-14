@@ -4,11 +4,8 @@ import com.example.testproject.dao.BaseDao;
 import com.example.testproject.dao.UserDao;
 import com.example.testproject.entity.User;
 import com.example.testproject.entity.UserFile;
-
 import java.sql.*;
 import java.util.List;
-import java.util.Properties;
-
 import java.io.InputStream;
 
 public class UserDaoImpl extends BaseDao<User> implements UserDao {
@@ -18,6 +15,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
     private static final String UPDATE_USER = "UPDATE users SET login = ?, password = ? WHERE login = ?";
     private static final String INSERT_FILE = "UPDATE users SET file = ?, file_extension = ? WHERE login = ?";
     private static final String SELECT_FILE = "SELECT file, file_extension FROM users WHERE login = ?";
+    private static final String SELECT_USER_ID = "SELECT UserID FROM users WHERE login = ?";
     private static UserDaoImpl instance = new UserDaoImpl();
     private UserDaoImpl() {
     }
@@ -40,10 +38,28 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
     public List<User> findAll() {
         return null;
     }
-
     @Override
     public User update(User user) {
         return null;
+    }
+    @Override
+    public int findUserIdByLogin(String login) {
+        int userId = -1;
+        Connection connection = null;
+        try {
+            connection = connectionPool.getConnection();
+            PreparedStatement statement = connection.prepareStatement(SELECT_USER_ID);
+            statement.setString(1, login);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                userId = resultSet.getInt(1);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } finally {
+            connectionPool.releaseConnection(connection);
+        }
+        return userId;
     }
     @Override
     public  boolean register(String login,String password){

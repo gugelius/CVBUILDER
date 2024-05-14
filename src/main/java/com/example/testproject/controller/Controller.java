@@ -30,6 +30,17 @@ public class Controller extends HttpServlet {
         out.print(result);
         out.flush();
     }
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json");
+        String commandStr = request.getHeader("command");
+        Command command = CommandType.define(commandStr);
+        JsonObject jsonObject = new JsonObject(); // Создаем пустой JsonObject
+        String result = command.execute(request, jsonObject, response);
 
+        PrintWriter out = response.getWriter();
+        out.print(result);
+        out.flush();
+    }
     public void destroy() {}
 }

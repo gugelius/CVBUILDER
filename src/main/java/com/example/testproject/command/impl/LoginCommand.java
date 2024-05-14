@@ -1,8 +1,10 @@
 package com.example.testproject.command.impl;
 
 import com.example.testproject.command.Command;
+import com.example.testproject.entity.User;
 import com.example.testproject.service.UserService;
 import com.example.testproject.service.impl.UserServiceImpl;
+import com.example.testproject.utils.TokenUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -23,8 +25,7 @@ public class LoginCommand implements Command{
             if (userService.authentificate(login, password)) {
                 HttpSession session = request.getSession();
                 session.setAttribute("user", login);
-
-                String jwt = userService.createJWT(login, "YourApp", login, 3600000); // 1 hour ttl
+                String jwt = TokenUtils.createJWT(String.valueOf(userService.findUserIdByLogin(login)), "YourApp", login, 3600000); // 1 hour ttl
                 JsonObject responseJson = new JsonObject();
                 responseJson.addProperty("message", "User authenticated");
                 responseJson.addProperty("token", jwt);

@@ -4,7 +4,9 @@ import com.example.testproject.command.impl.*;
 
 public enum CommandType {
     ADD_USER(new AddUserCommand()),
-    LOGIN(new LoginCommand());
+    LOGIN(new LoginCommand()),
+    LOAD_RESUMES(new LoadResumesCommand()),
+    SAVE_RESUME(new SaveResumeCommand());
 //    LOGOUT(new LogoutCommand() ),
 //    DEFAULT(new DefaultCommand()),
 //    CHANGE_PROFILE(new ChangeProfileCommand()),
