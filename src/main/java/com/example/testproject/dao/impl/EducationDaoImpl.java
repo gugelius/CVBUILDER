@@ -1,8 +1,8 @@
 package com.example.testproject.dao.impl;
 
 import com.example.testproject.dao.BaseDao;
-import com.example.testproject.dao.ExperienceDao;
-import com.example.testproject.entity.Experience;
+import com.example.testproject.dao.EducationDao;
+import com.example.testproject.entity.Education;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,45 +10,45 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExperienceDaoImpl extends BaseDao<Experience> implements ExperienceDao {
+public class EducationDaoImpl extends BaseDao<Education> implements EducationDao {
     private final ConnectionPool connectionPool = ConnectionPool.getInstance();
-    private static ExperienceDaoImpl instance = new ExperienceDaoImpl();
+    private static EducationDaoImpl instance = new EducationDaoImpl();
 
-    private ExperienceDaoImpl() {
+    private EducationDaoImpl() {
     }
 
-    public static ExperienceDaoImpl getInstance() {
+    public static EducationDaoImpl getInstance() {
         return instance;
     }
     @Override
-    public boolean insert(Experience experience) {
+    public boolean insert(Education education) {
         return false;
     }
 
     @Override
-    public boolean delete(Experience experience) {
+    public boolean delete(Education education) {
         return false;
     }
 
     @Override
-    public Experience update(Experience experience) {
+    public Education update(Education education) {
         return null;
     }
     @Override
-    public List<Experience> findAll(){
+    public List<Education> findAll(){
         return null;
     }
 
     @Override
-    public boolean save(Experience experience, int ResumeID) {
+    public boolean save(Education education, int ResumeID) {
         try (Connection connection = connectionPool.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO experience (ResumeID, position, company, city, start, end) VALUES (?, ?, ?, ?, ?, ?)")) {
+             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO education (ResumeID, name, degree, city, start, end) VALUES (?, ?, ?, ?, ?, ?)")) {
             preparedStatement.setInt(1, ResumeID);
-            preparedStatement.setString(2, experience.getPosition());
-            preparedStatement.setString(3, experience.getCompany());
-            preparedStatement.setString(4, experience.getCity());
-            preparedStatement.setString(5, experience.getStartDate());
-            preparedStatement.setString(6, experience.getEndDate());
+            preparedStatement.setString(2, education.getName());
+            preparedStatement.setString(3, education.getDegree());
+            preparedStatement.setString(4, education.getCity());
+            preparedStatement.setString(5, education.getStartYear());
+            preparedStatement.setString(6, education.getEndYear());
             int rowsAffected = preparedStatement.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {
@@ -57,49 +57,49 @@ public class ExperienceDaoImpl extends BaseDao<Experience> implements Experience
         return false;
     }
     @Override
-    public List<Experience> loadExperience(int resumeId) {
-        List<Experience> experiences = new ArrayList<>();
+    public List<Education> loadEducations(int resumeId) {
+        List<Education> educations = new ArrayList<>();
         Connection connection = null;
         try {
             connection = connectionPool.getConnection();
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM experience WHERE ResumeID = ?");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM education WHERE ResumeID = ?");
             statement.setInt(1, resumeId);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                Experience experience = new Experience(
-                        rs.getInt("ExperienceID"),
+                Education education = new Education(
+                        rs.getInt("EducationID"),
                         rs.getInt("ResumeID"),
                         false,
-                        rs.getString("position"),
-                        rs.getString("company"),
+                        rs.getString("name"),
+                        rs.getString("degree"),
                         rs.getString("city"),
                         rs.getString("start"),
                         rs.getString("end")
                 );
-                experiences.add(experience);
+                educations.add(education);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         } finally {
             connectionPool.releaseConnection(connection);
         }
-        return experiences;
+        return educations;
     }
     @Override
-    public boolean updateExperience(Experience experience) {
+    public boolean updateEducation(Education education) {
         Connection connection = null;
         try {
-            experience.setIsNew(false);
+            education.setIsNew(false);
             connection = connectionPool.getConnection();
             PreparedStatement statement = connection.prepareStatement(
-                    "UPDATE experience SET position = ?, company = ?, city = ?, start = ?, end = ? WHERE ExperienceID = ?"
+                    "UPDATE education SET name = ?, degree = ?, city = ?, start = ?, end = ? WHERE EducationID = ?"
             );
-            statement.setString(1, experience.getPosition());
-            statement.setString(2, experience.getCompany());
-            statement.setString(3,experience.getCity());
-            statement.setString(4, experience.getStartDate());
-            statement.setString(5, experience.getEndDate());
-            statement.setInt(6, experience.getExperienceId());
+            statement.setString(1, education.getName());
+            statement.setString(2, education.getDegree());
+            statement.setString(3,education.getCity());
+            statement.setString(4, education.getStartYear());
+            statement.setString(5, education.getEndYear());
+            statement.setInt(6, education.getEducationId());
             int rowsUpdated = statement.executeUpdate();
             return rowsUpdated > 0;
         } catch (SQLException throwables) {
@@ -110,14 +110,14 @@ public class ExperienceDaoImpl extends BaseDao<Experience> implements Experience
         return false;
     }
     @Override
-    public void deleteExperience(int experienceId) {
+    public void deleteEducation(int educationId) {
         Connection connection = null;
         try {
             connection = connectionPool.getConnection();
             PreparedStatement statement = connection.prepareStatement(
-                    "DELETE FROM experience WHERE ExperienceID = ?"
+                    "DELETE FROM education WHERE EducationID = ?"
             );
-            statement.setInt(1, experienceId);
+            statement.setInt(1, educationId);
             statement.executeUpdate();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -126,12 +126,12 @@ public class ExperienceDaoImpl extends BaseDao<Experience> implements Experience
         }
     }
     @Override
-    public void deleteAllExperience(int resumeId) {
+    public void deleteAllEducation(int resumeId) {
         Connection connection = null;
         try {
             connection = connectionPool.getConnection();
             PreparedStatement statement = connection.prepareStatement(
-                    "DELETE FROM experience WHERE ResumeID = ?"
+                    "DELETE FROM education WHERE ResumeID = ?"
             );
             statement.setInt(1, resumeId);
             statement.executeUpdate();

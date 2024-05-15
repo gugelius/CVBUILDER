@@ -13,21 +13,15 @@ import java.util.List;
 
 public class LoadResumesCommand implements Command {
     private final Gson gson = new Gson();
-
     @Override
     public String execute(HttpServletRequest request, JsonObject jsonObject, HttpServletResponse response) {
-        try {
-            String jwt = request.getHeader("Authorization").substring(7); // Extract token from "Bearer {token}"
-            String userIdString = TokenUtils.decodeJWT(jwt); // Extract username from token
-            ResumeInfoService resumeInfoService = ResumeInfoServiceImpl.getInstance();
-            List<ResumeInfo> resumeInfo = resumeInfoService.findAllForUser(Integer.parseInt(userIdString));
-            return gson.toJson(resumeInfo);
-        } catch (NullPointerException e) {
-            System.out.println("Ошибка: отсутствует заголовок 'Authorization'");
-            throw new RuntimeException(e);
-        } catch (Exception e) {
-            System.out.println("Ошибка: " + e.getMessage());
-            throw new RuntimeException(e);
+        String jwt = request.getHeader("Authorization").substring(7);
+        if (!TokenUtils.validateJWT(jwt)) {
+            return gson.toJson("Invalid token");
         }
+        String userIdString = TokenUtils.decodeJWT(jwt);
+        ResumeInfoService resumeInfoService = ResumeInfoServiceImpl.getInstance();
+        List<ResumeInfo> resumeInfo = resumeInfoService.findAllForUser(Integer.parseInt(userIdString));
+        return gson.toJson(resumeInfo);
     }
 }

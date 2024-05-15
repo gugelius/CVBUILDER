@@ -6,13 +6,10 @@ public enum CommandType {
     ADD_USER(new AddUserCommand()),
     LOGIN(new LoginCommand()),
     LOAD_RESUMES(new LoadResumesCommand()),
-    SAVE_RESUME(new SaveResumeCommand());
-//    LOGOUT(new LogoutCommand() ),
-//    DEFAULT(new DefaultCommand()),
-//    CHANGE_PROFILE(new ChangeProfileCommand()),
-//    SETLOCALE(new SetLocaleCommand()),
-//    FILE_UPLOAD(new FileUploadCommand()),
-//    FILE_DOWNLOAD(new FileDownloadCommand());
+    SAVE_RESUME(new SaveResumeCommand()),
+    LOAD_RESUME(new LoadResumeCommand()),
+    UPDATE_RESUME(new UpdateResumeCommand()),
+    DELETE_RESUME(new DeleteResumeCommand());
     Command command;
     CommandType(Command command) {
         this.command = command;

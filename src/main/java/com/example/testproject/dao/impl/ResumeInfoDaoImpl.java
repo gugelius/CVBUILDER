@@ -21,19 +21,16 @@ public class ResumeInfoDaoImpl extends BaseDao<ResumeInfo> implements ResumeInfo
 
     @Override
     public boolean insert(ResumeInfo resumeInfo) {
-        // Реализуйте здесь логику вставки
         return false;
     }
 
     @Override
     public boolean delete(ResumeInfo resumeInfo) {
-        // Реализуйте здесь логику удаления
         return false;
     }
 
     @Override
     public ResumeInfo update(ResumeInfo resumeInfo) {
-        // Реализуйте здесь логику обновления
         return null;
     }
     @Override
@@ -64,7 +61,4 @@ public class ResumeInfoDaoImpl extends BaseDao<ResumeInfo> implements ResumeInfo
         }
         return resumeInfos;
     }
-
-
-    // Implement other methods as needed...
 }

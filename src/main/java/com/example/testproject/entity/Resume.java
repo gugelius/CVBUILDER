@@ -1,8 +1,5 @@
 package com.example.testproject.entity;
 
-
-import java.util.List;
-
 public class Resume extends AbstractEntity{
     private int userId;
     private int resumeId;
@@ -10,28 +7,23 @@ public class Resume extends AbstractEntity{
     private String date;
     private String name;
     private String surname;
+    private String email;
     private String phone;
     private String adress;
     private String about;
-    private List<Education> educationList;
-    private List<Skill> skillList;
-    private List<Experience> experienceList;
 
-public Resume(int resumeId,int userId, String title, String date,String name, String surname, String phone, String adress, String about, List<Education> educationList, List<Skill> skillList, List<Experience> experienceList) {
-    this.userId = userId;
-    this.resumeId = resumeId;
-    this.title = title;
-    this.date = date;
-    this.name = name;
-    this.surname = surname;
-    this.phone = phone;
-    this.adress = adress;
-    this.about = about;
-    this.educationList = educationList;
-    this.skillList = skillList;
-    this.experienceList = experienceList;
-}
-    // Геттеры и сеттеры для каждого поля...
+    public Resume(int resumeId,int userId, String title, String date,String name, String surname, String email, String phone, String adress, String about) {
+        this.userId = userId;
+        this.resumeId = resumeId;
+        this.title = title;
+        this.date = date;
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+        this.phone = phone;
+        this.adress = adress;
+        this.about = about;
+    }
     public void setUserId(int userId){
         this.userId=userId;
     }
@@ -56,26 +48,19 @@ public Resume(int resumeId,int userId, String title, String date,String name, St
     public String getAbout(){
         return about;
     }
-
     public String getName() {
     return name;
     }
-
     public String getSurname() {
     return surname;
     }
-
     public String getPhone() {
     return phone;
     }
-
     public String getAdress() {
     return adress;
     }
-    public List<Experience> getExperienceList(){
-    return experienceList;
+    public String getEmail() {
+    return email;
     }
-//todo блять
-//    public Experience[] getExperienceList() {
-//    }
 }

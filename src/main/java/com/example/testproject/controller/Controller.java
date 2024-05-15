@@ -25,7 +25,6 @@ public class Controller extends HttpServlet {
         String commandStr = jsonObject.get("command").getAsString();
         Command command = CommandType.define(commandStr);
         String result = command.execute(request, jsonObject, response);
-
         PrintWriter out = response.getWriter();
         out.print(result);
         out.flush();
@@ -35,9 +34,8 @@ public class Controller extends HttpServlet {
         response.setContentType("application/json");
         String commandStr = request.getHeader("command");
         Command command = CommandType.define(commandStr);
-        JsonObject jsonObject = new JsonObject(); // Создаем пустой JsonObject
+        JsonObject jsonObject = new JsonObject();
         String result = command.execute(request, jsonObject, response);
-
         PrintWriter out = response.getWriter();
         out.print(result);
         out.flush();

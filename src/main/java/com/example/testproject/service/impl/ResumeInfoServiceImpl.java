@@ -9,7 +9,6 @@ import java.util.List;
 public class ResumeInfoServiceImpl implements ResumeInfoService {
     private static ResumeInfoServiceImpl instance = new ResumeInfoServiceImpl();
     private final ResumeInfoDao resumeInfoDao = ResumeInfoDaoImpl.getInstance();
-
     public static ResumeInfoServiceImpl getInstance() {
         return instance;
     }

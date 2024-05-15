@@ -1,8 +1,8 @@
 package com.example.testproject.dao.impl;
 
 import com.example.testproject.dao.BaseDao;
-import com.example.testproject.dao.ExperienceDao;
-import com.example.testproject.entity.Experience;
+import com.example.testproject.dao.SkillDao;
+import com.example.testproject.entity.Skill;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,45 +10,41 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExperienceDaoImpl extends BaseDao<Experience> implements ExperienceDao {
+public class SkillDaoImpl extends BaseDao<Skill> implements SkillDao {
     private final ConnectionPool connectionPool = ConnectionPool.getInstance();
-    private static ExperienceDaoImpl instance = new ExperienceDaoImpl();
+    private static SkillDaoImpl instance = new SkillDaoImpl();
 
-    private ExperienceDaoImpl() {
+    private SkillDaoImpl() {
     }
 
-    public static ExperienceDaoImpl getInstance() {
+    public static SkillDaoImpl getInstance() {
         return instance;
     }
     @Override
-    public boolean insert(Experience experience) {
+    public boolean insert(Skill skill) {
         return false;
     }
 
     @Override
-    public boolean delete(Experience experience) {
+    public boolean delete(Skill skill) {
         return false;
     }
 
     @Override
-    public Experience update(Experience experience) {
+    public Skill update(Skill skill) {
         return null;
     }
     @Override
-    public List<Experience> findAll(){
+    public List<Skill> findAll(){
         return null;
     }
-
     @Override
-    public boolean save(Experience experience, int ResumeID) {
+    public boolean save(Skill skill, int ResumeID) {
         try (Connection connection = connectionPool.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO experience (ResumeID, position, company, city, start, end) VALUES (?, ?, ?, ?, ?, ?)")) {
+             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO skill (ResumeID, name, level) VALUES (?, ?, ?)")) {
             preparedStatement.setInt(1, ResumeID);
-            preparedStatement.setString(2, experience.getPosition());
-            preparedStatement.setString(3, experience.getCompany());
-            preparedStatement.setString(4, experience.getCity());
-            preparedStatement.setString(5, experience.getStartDate());
-            preparedStatement.setString(6, experience.getEndDate());
+            preparedStatement.setString(2, skill.getName());
+            preparedStatement.setInt(3, skill.getLevel());
             int rowsAffected = preparedStatement.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {
@@ -57,49 +53,43 @@ public class ExperienceDaoImpl extends BaseDao<Experience> implements Experience
         return false;
     }
     @Override
-    public List<Experience> loadExperience(int resumeId) {
-        List<Experience> experiences = new ArrayList<>();
+    public List<Skill> loadSkill(int resumeId) {
+        List<Skill> skills = new ArrayList<>();
         Connection connection = null;
         try {
             connection = connectionPool.getConnection();
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM experience WHERE ResumeID = ?");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM skill WHERE ResumeID = ?");
             statement.setInt(1, resumeId);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                Experience experience = new Experience(
-                        rs.getInt("ExperienceID"),
+                Skill skill = new Skill(
+                        rs.getInt("SkillID"),
                         rs.getInt("ResumeID"),
                         false,
-                        rs.getString("position"),
-                        rs.getString("company"),
-                        rs.getString("city"),
-                        rs.getString("start"),
-                        rs.getString("end")
+                        rs.getString("name"),
+                        rs.getInt("level")
                 );
-                experiences.add(experience);
+                skills.add(skill);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         } finally {
             connectionPool.releaseConnection(connection);
         }
-        return experiences;
+        return skills;
     }
     @Override
-    public boolean updateExperience(Experience experience) {
+    public boolean updateSkill(Skill skill) {
         Connection connection = null;
         try {
-            experience.setIsNew(false);
+            skill.setIsNew(false);
             connection = connectionPool.getConnection();
             PreparedStatement statement = connection.prepareStatement(
-                    "UPDATE experience SET position = ?, company = ?, city = ?, start = ?, end = ? WHERE ExperienceID = ?"
+                    "UPDATE skill SET name = ?, level = ? WHERE SkillID = ?"
             );
-            statement.setString(1, experience.getPosition());
-            statement.setString(2, experience.getCompany());
-            statement.setString(3,experience.getCity());
-            statement.setString(4, experience.getStartDate());
-            statement.setString(5, experience.getEndDate());
-            statement.setInt(6, experience.getExperienceId());
+            statement.setString(1, skill.getName());
+            statement.setInt(2, skill.getLevel());
+            statement.setInt(3, skill.getSkillId());
             int rowsUpdated = statement.executeUpdate();
             return rowsUpdated > 0;
         } catch (SQLException throwables) {
@@ -110,14 +100,14 @@ public class ExperienceDaoImpl extends BaseDao<Experience> implements Experience
         return false;
     }
     @Override
-    public void deleteExperience(int experienceId) {
+    public void deleteSkill(int skillId) {
         Connection connection = null;
         try {
             connection = connectionPool.getConnection();
             PreparedStatement statement = connection.prepareStatement(
-                    "DELETE FROM experience WHERE ExperienceID = ?"
+                    "DELETE FROM skill WHERE SkillID = ?"
             );
-            statement.setInt(1, experienceId);
+            statement.setInt(1, skillId);
             statement.executeUpdate();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -126,12 +116,12 @@ public class ExperienceDaoImpl extends BaseDao<Experience> implements Experience
         }
     }
     @Override
-    public void deleteAllExperience(int resumeId) {
+    public void deleteAllSkill(int resumeId) {
         Connection connection = null;
         try {
             connection = connectionPool.getConnection();
             PreparedStatement statement = connection.prepareStatement(
-                    "DELETE FROM experience WHERE ResumeID = ?"
+                    "DELETE FROM skill WHERE ResumeID = ?"
             );
             statement.setInt(1, resumeId);
             statement.executeUpdate();

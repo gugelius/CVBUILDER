@@ -1,46 +1,40 @@
 package com.example.testproject.entity;
 
-public class Skill {
+public class Skill extends AbstractEntity{
     private int skillId;
     private int resumeId;
-    private int name;
+    private boolean isNew;
+    private String name;
     private int level;
-
-    public Skill(int resumeId, int name, int level) {
+    public Skill(int skillId, int resumeId, boolean isNew, String name, int level) {
+        this.skillId = skillId;
         this.resumeId = resumeId;
+        this.isNew = isNew;
         this.name = name;
         this.level = level;
     }
-
     public int getSkillId() {
         return skillId;
     }
-
-    public void setSkillId(int skillId) {
-        this.skillId = skillId;
-    }
-
     public int getResumeId() {
         return resumeId;
     }
-
     public void setResumeId(int resumeId) {
         this.resumeId = resumeId;
     }
-
-    public int getName() {
+    public String getName() {
         return name;
     }
-
-    public void setName(int name) {
+    public void setName(String name) {
         this.name = name;
     }
-
     public int getLevel() {
         return level;
     }
-
-    public void setLevel(int level) {
-        this.level = level;
+    public void setIsNew(boolean isNew) {
+        this.isNew = isNew;
+    }
+    public boolean getIsNew() {
+        return isNew;
     }
 }

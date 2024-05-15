@@ -9,7 +9,6 @@ public class ResumeInfo extends AbstractEntity{
         this.title = title;
         this.date = date;
     }
-    // Геттеры и сеттеры для каждого поля...
     public int getResumeId() {
         return resumeId;
     }

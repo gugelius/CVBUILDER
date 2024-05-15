@@ -1,7 +1,6 @@
 package com.example.testproject.command.impl;
 
 import com.example.testproject.command.Command;
-import com.example.testproject.entity.User;
 import com.example.testproject.service.UserService;
 import com.example.testproject.service.impl.UserServiceImpl;
 import com.example.testproject.utils.TokenUtils;

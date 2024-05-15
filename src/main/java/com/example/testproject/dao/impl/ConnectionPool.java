@@ -10,7 +10,7 @@ public class ConnectionPool {
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/testschema";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "уВшшсс11";
-    private static final int MAX_CONNECTIONS = 10;
+    private static final int MAX_CONNECTIONS = 15;
     private static ConnectionPool instance;
     private final String jdbcUrl;
     private final String username;
@@ -64,7 +64,7 @@ public class ConnectionPool {
             try {
                 connection.close();
             } catch (SQLException e) {
-                // Handle exception (log or rethrow)
+
             }
         }
     }

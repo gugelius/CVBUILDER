@@ -1,6 +1,5 @@
 package com.example.testproject.service.impl;
 
-import com.example.testproject.entity.User;
 import com.example.testproject.utils.ValidationUtils;
 import com.example.testproject.dao.impl.UserDaoImpl;
 import com.example.testproject.entity.UserFile;
@@ -13,7 +12,6 @@ public class UserServiceImpl implements UserService {
         return instance;
     }
     private UserServiceImpl(){
-
     }
     @Override
     public int findUserIdByLogin(String login){
@@ -34,20 +32,6 @@ public class UserServiceImpl implements UserService {
         boolean registration = userDao.register(login,hashedPassword);
         return registration;
     }
-    @Override
-    public boolean updateProfile(String login, String oldPassword, String newLogin, String newPassword){
-        String hashedOldPassword = ValidationUtils.md5(oldPassword);
-        UserDaoImpl userDao = UserDaoImpl.getInstance();
-        boolean match = userDao.authentificate(login, hashedOldPassword);
-        if (match) {
-            String hashedNewPassword = ValidationUtils.md5(newPassword);
-            boolean update = userDao.updateUser(newLogin, hashedNewPassword, login);
-            return update;
-        }
-        return false;
-    }
-    //todo
-    // загрузка файла в бд
     @Override
     public boolean uploadFile(String login, InputStream fileContent, String fileExtension) {
         UserDaoImpl userDao = UserDaoImpl.getInstance();
