@@ -3,17 +3,14 @@ package com.example.testproject.dao.impl;
 import com.example.testproject.dao.BaseDao;
 import com.example.testproject.dao.ResumeDao;
 import com.example.testproject.entity.Resume;
-import com.example.testproject.service.EducationService;
-import com.example.testproject.service.ExperienceService;
-import com.example.testproject.service.SkillService;
-import com.example.testproject.service.impl.EducationServiceImpl;
-import com.example.testproject.service.impl.ExperienceServiceImpl;
-import com.example.testproject.service.impl.SkillServiceImpl;
-
 import java.sql.*;
 import java.util.List;
 
 public class ResumeDaoImpl extends BaseDao<Resume> implements ResumeDao {
+    private static final String SAVE_RESUME = "INSERT INTO resumes (UserID, title, date, name, surname, email, phone, adress, about) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String LOAD_RESUME = "SELECT * FROM resumes WHERE ResumeID = ?";
+    private static final String UPDATE_RESUME = "UPDATE resumes SET title = ?, date = ?, name = ?, surname = ?, email = ?, phone = ?, adress = ?, about = ? WHERE ResumeID = ?";
+    private static final String DELETE_RESUME = "DELETE FROM resumes WHERE ResumeID = ?";
     private final ConnectionPool connectionPool = ConnectionPool.getInstance();
     private static ResumeDaoImpl instance = new ResumeDaoImpl();
 
@@ -47,7 +44,7 @@ public class ResumeDaoImpl extends BaseDao<Resume> implements ResumeDao {
         Connection connection = null;
         try {
             connection = connectionPool.getConnection();
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO resumes (UserID, title, date, name, surname, email, phone, adress, about) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement statement = connection.prepareStatement(SAVE_RESUME, Statement.RETURN_GENERATED_KEYS);
             statement.setInt(1, resume.getUserId());
             statement.setString(2, resume.getTitle());
             statement.setString(3, resume.getDate());
@@ -78,7 +75,7 @@ public class ResumeDaoImpl extends BaseDao<Resume> implements ResumeDao {
         Connection connection = null;
         try {
             connection = connectionPool.getConnection();
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM resumes WHERE ResumeID = ?");
+            PreparedStatement statement = connection.prepareStatement(LOAD_RESUME);
             statement.setInt(1, resumeId);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
@@ -108,9 +105,7 @@ public class ResumeDaoImpl extends BaseDao<Resume> implements ResumeDao {
         Connection connection = null;
         try {
             connection = connectionPool.getConnection();
-            PreparedStatement statement = connection.prepareStatement(
-                    "UPDATE resumes SET title = ?, date = ?, name = ?, surname = ?, email = ?, phone = ?, adress = ?, about = ? WHERE ResumeID = ?"
-            );
+            PreparedStatement statement = connection.prepareStatement(UPDATE_RESUME);
             statement.setString(1, resume.getTitle());
             statement.setString(2, resume.getDate());
             statement.setString(3, resume.getName());
@@ -134,9 +129,7 @@ public class ResumeDaoImpl extends BaseDao<Resume> implements ResumeDao {
         Connection connection = null;
         try {
             connection = connectionPool.getConnection();
-            PreparedStatement statement = connection.prepareStatement(
-                    "DELETE FROM resumes WHERE ResumeID = ?"
-            );
+            PreparedStatement statement = connection.prepareStatement(DELETE_RESUME);
             statement.setInt(1, resumeId);
             statement.executeUpdate();
         } catch (SQLException throwables) {

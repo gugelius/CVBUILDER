@@ -11,7 +11,7 @@ import java.io.InputStream;
 public class UserDaoImpl extends BaseDao<User> implements UserDao {
     private final ConnectionPool connectionPool = ConnectionPool.getInstance();
     private static final String SELECT_LOGIN_PASSWORD = "SELECT password  FROM users WHERE login=?";
-    private  static  final  String INSERT_NEW_USER = "INSERT INTO users (login, password) VALUES (?, ?)";
+    private static final String INSERT_NEW_USER = "INSERT INTO users (login, password) VALUES (?, ?)";
     private static final String UPDATE_USER = "UPDATE users SET login = ?, password = ? WHERE login = ?";
     private static final String INSERT_FILE = "UPDATE users SET file = ?, file_extension = ? WHERE login = ?";
     private static final String SELECT_FILE = "SELECT file, file_extension FROM users WHERE login = ?";

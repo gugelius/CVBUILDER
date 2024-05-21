@@ -94,7 +94,7 @@ public class UpdateResumeCommand implements Command {
             }
             else {
                 experienceService.updateExperience(experience);
-            }// Use the returned ResumeID here
+            }
         }
         for (JsonElement educationElement : educationsArray) {
             Education education = gson.fromJson(educationElement, Education.class);
@@ -103,7 +103,7 @@ public class UpdateResumeCommand implements Command {
             }
             else {
                 educationService.updateEducation(education);
-            }// Use the returned ResumeID here
+            }
         }
         for (JsonElement skillElement : skillsArray) {
             Skill skill = gson.fromJson(skillElement, Skill.class);
@@ -112,7 +112,7 @@ public class UpdateResumeCommand implements Command {
             }
             else {
                 skillService.updateSkill(skill);
-            }// Use the returned ResumeID here
+            }
         }
 
         return gson.toJson("success");

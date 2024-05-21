@@ -11,6 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ExperienceDaoImpl extends BaseDao<Experience> implements ExperienceDao {
+    private static final String SAVE_EXPERIENCE = "INSERT INTO experience (ResumeID, position, company, city, start, end) VALUES (?, ?, ?, ?, ?, ?)";
+    private static final String LOAD_EXPERIENCE = "SELECT * FROM experience WHERE ResumeID = ?";
+    private static final String UPDATE_EXPERIENCE = "UPDATE experience SET position = ?, company = ?, city = ?, start = ?, end = ? WHERE ExperienceID = ?";
+    private static final String DELETE_EXPERIENCE = "DELETE FROM experience WHERE ExperienceID = ?";
+    private static final String DELETE_ALL_EXPERIENCE = "DELETE FROM experience WHERE ResumeID = ?";
     private final ConnectionPool connectionPool = ConnectionPool.getInstance();
     private static ExperienceDaoImpl instance = new ExperienceDaoImpl();
 
@@ -42,7 +47,7 @@ public class ExperienceDaoImpl extends BaseDao<Experience> implements Experience
     @Override
     public boolean save(Experience experience, int ResumeID) {
         try (Connection connection = connectionPool.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO experience (ResumeID, position, company, city, start, end) VALUES (?, ?, ?, ?, ?, ?)")) {
+             PreparedStatement preparedStatement = connection.prepareStatement(SAVE_EXPERIENCE)) {
             preparedStatement.setInt(1, ResumeID);
             preparedStatement.setString(2, experience.getPosition());
             preparedStatement.setString(3, experience.getCompany());
@@ -62,7 +67,7 @@ public class ExperienceDaoImpl extends BaseDao<Experience> implements Experience
         Connection connection = null;
         try {
             connection = connectionPool.getConnection();
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM experience WHERE ResumeID = ?");
+            PreparedStatement statement = connection.prepareStatement(LOAD_EXPERIENCE);
             statement.setInt(1, resumeId);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
@@ -91,9 +96,7 @@ public class ExperienceDaoImpl extends BaseDao<Experience> implements Experience
         try {
             experience.setIsNew(false);
             connection = connectionPool.getConnection();
-            PreparedStatement statement = connection.prepareStatement(
-                    "UPDATE experience SET position = ?, company = ?, city = ?, start = ?, end = ? WHERE ExperienceID = ?"
-            );
+            PreparedStatement statement = connection.prepareStatement(UPDATE_EXPERIENCE);
             statement.setString(1, experience.getPosition());
             statement.setString(2, experience.getCompany());
             statement.setString(3,experience.getCity());
@@ -114,9 +117,7 @@ public class ExperienceDaoImpl extends BaseDao<Experience> implements Experience
         Connection connection = null;
         try {
             connection = connectionPool.getConnection();
-            PreparedStatement statement = connection.prepareStatement(
-                    "DELETE FROM experience WHERE ExperienceID = ?"
-            );
+            PreparedStatement statement = connection.prepareStatement(DELETE_EXPERIENCE);
             statement.setInt(1, experienceId);
             statement.executeUpdate();
         } catch (SQLException throwables) {
@@ -130,9 +131,7 @@ public class ExperienceDaoImpl extends BaseDao<Experience> implements Experience
         Connection connection = null;
         try {
             connection = connectionPool.getConnection();
-            PreparedStatement statement = connection.prepareStatement(
-                    "DELETE FROM experience WHERE ResumeID = ?"
-            );
+            PreparedStatement statement = connection.prepareStatement(DELETE_ALL_EXPERIENCE);
             statement.setInt(1, resumeId);
             statement.executeUpdate();
         } catch (SQLException throwables) {

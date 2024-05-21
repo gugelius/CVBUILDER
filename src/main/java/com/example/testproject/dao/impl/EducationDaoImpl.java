@@ -11,6 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EducationDaoImpl extends BaseDao<Education> implements EducationDao {
+    private static final String SAVE_EDUCATION = "INSERT INTO education (ResumeID, name, degree, city, start, end) VALUES (?, ?, ?, ?, ?, ?)";
+    private static final String LOAD_EDUCATIONS = "SELECT * FROM education WHERE ResumeID = ?";
+    private static final String UPDATE_EDUCATION = "UPDATE education SET name = ?, degree = ?, city = ?, start = ?, end = ? WHERE EducationID = ?";
+    private static final String DELETE_EDUCATION = "DELETE FROM education WHERE EducationID = ?";
+    private static final String DELETE_ALL_EDUCATION = "DELETE FROM education WHERE ResumeID = ?";
     private final ConnectionPool connectionPool = ConnectionPool.getInstance();
     private static EducationDaoImpl instance = new EducationDaoImpl();
 
@@ -42,7 +47,7 @@ public class EducationDaoImpl extends BaseDao<Education> implements EducationDao
     @Override
     public boolean save(Education education, int ResumeID) {
         try (Connection connection = connectionPool.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO education (ResumeID, name, degree, city, start, end) VALUES (?, ?, ?, ?, ?, ?)")) {
+             PreparedStatement preparedStatement = connection.prepareStatement(SAVE_EDUCATION)) {
             preparedStatement.setInt(1, ResumeID);
             preparedStatement.setString(2, education.getName());
             preparedStatement.setString(3, education.getDegree());
@@ -62,7 +67,7 @@ public class EducationDaoImpl extends BaseDao<Education> implements EducationDao
         Connection connection = null;
         try {
             connection = connectionPool.getConnection();
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM education WHERE ResumeID = ?");
+            PreparedStatement statement = connection.prepareStatement(LOAD_EDUCATIONS);
             statement.setInt(1, resumeId);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
@@ -91,9 +96,7 @@ public class EducationDaoImpl extends BaseDao<Education> implements EducationDao
         try {
             education.setIsNew(false);
             connection = connectionPool.getConnection();
-            PreparedStatement statement = connection.prepareStatement(
-                    "UPDATE education SET name = ?, degree = ?, city = ?, start = ?, end = ? WHERE EducationID = ?"
-            );
+            PreparedStatement statement = connection.prepareStatement(UPDATE_EDUCATION);
             statement.setString(1, education.getName());
             statement.setString(2, education.getDegree());
             statement.setString(3,education.getCity());
@@ -114,9 +117,7 @@ public class EducationDaoImpl extends BaseDao<Education> implements EducationDao
         Connection connection = null;
         try {
             connection = connectionPool.getConnection();
-            PreparedStatement statement = connection.prepareStatement(
-                    "DELETE FROM education WHERE EducationID = ?"
-            );
+            PreparedStatement statement = connection.prepareStatement(DELETE_EDUCATION);
             statement.setInt(1, educationId);
             statement.executeUpdate();
         } catch (SQLException throwables) {
@@ -130,9 +131,7 @@ public class EducationDaoImpl extends BaseDao<Education> implements EducationDao
         Connection connection = null;
         try {
             connection = connectionPool.getConnection();
-            PreparedStatement statement = connection.prepareStatement(
-                    "DELETE FROM education WHERE ResumeID = ?"
-            );
+            PreparedStatement statement = connection.prepareStatement(DELETE_ALL_EDUCATION);
             statement.setInt(1, resumeId);
             statement.executeUpdate();
         } catch (SQLException throwables) {

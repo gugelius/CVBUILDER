@@ -9,7 +9,7 @@ import java.util.List;
 
 public class ResumeInfoDaoImpl extends BaseDao<ResumeInfo> implements ResumeInfoDao {
     private final ConnectionPool connectionPool = ConnectionPool.getInstance();
-    private static final String SELECT_ALL_RESUMES = "SELECT * FROM resumes";
+    private static final String SELECT_ALL_RESUMES = "SELECT * FROM resumes WHERE UserID = ?";
     private static ResumeInfoDaoImpl instance = new ResumeInfoDaoImpl();
 
     private ResumeInfoDaoImpl() {
@@ -43,7 +43,7 @@ public class ResumeInfoDaoImpl extends BaseDao<ResumeInfo> implements ResumeInfo
         Connection connection = null;
         try {
             connection = connectionPool.getConnection();
-            PreparedStatement statement = connection.prepareStatement(SELECT_ALL_RESUMES + " WHERE UserID = ?");
+            PreparedStatement statement = connection.prepareStatement(SELECT_ALL_RESUMES);
             statement.setInt(1, userId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {

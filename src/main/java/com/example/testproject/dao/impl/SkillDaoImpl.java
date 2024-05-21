@@ -11,6 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SkillDaoImpl extends BaseDao<Skill> implements SkillDao {
+    private static final String SAVE_SKILL = "INSERT INTO skill (ResumeID, name, level) VALUES (?, ?, ?)";
+    private static final String LOAD_SKILL = "SELECT * FROM skill WHERE ResumeID = ?";
+    private static final String UPDATE_SKILL = "UPDATE skill SET name = ?, level = ? WHERE SkillID = ?";
+    private static final String DELETE_SKILL = "DELETE FROM skill WHERE SkillID = ?";
+    private static final String DELETE_ALL_SKILLS = "DELETE FROM skill WHERE ResumeID = ?";
     private final ConnectionPool connectionPool = ConnectionPool.getInstance();
     private static SkillDaoImpl instance = new SkillDaoImpl();
 
@@ -41,7 +46,7 @@ public class SkillDaoImpl extends BaseDao<Skill> implements SkillDao {
     @Override
     public boolean save(Skill skill, int ResumeID) {
         try (Connection connection = connectionPool.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO skill (ResumeID, name, level) VALUES (?, ?, ?)")) {
+             PreparedStatement preparedStatement = connection.prepareStatement(SAVE_SKILL)) {
             preparedStatement.setInt(1, ResumeID);
             preparedStatement.setString(2, skill.getName());
             preparedStatement.setInt(3, skill.getLevel());
@@ -58,7 +63,7 @@ public class SkillDaoImpl extends BaseDao<Skill> implements SkillDao {
         Connection connection = null;
         try {
             connection = connectionPool.getConnection();
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM skill WHERE ResumeID = ?");
+            PreparedStatement statement = connection.prepareStatement(LOAD_SKILL);
             statement.setInt(1, resumeId);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
@@ -84,9 +89,7 @@ public class SkillDaoImpl extends BaseDao<Skill> implements SkillDao {
         try {
             skill.setIsNew(false);
             connection = connectionPool.getConnection();
-            PreparedStatement statement = connection.prepareStatement(
-                    "UPDATE skill SET name = ?, level = ? WHERE SkillID = ?"
-            );
+            PreparedStatement statement = connection.prepareStatement(UPDATE_SKILL);
             statement.setString(1, skill.getName());
             statement.setInt(2, skill.getLevel());
             statement.setInt(3, skill.getSkillId());
@@ -104,9 +107,7 @@ public class SkillDaoImpl extends BaseDao<Skill> implements SkillDao {
         Connection connection = null;
         try {
             connection = connectionPool.getConnection();
-            PreparedStatement statement = connection.prepareStatement(
-                    "DELETE FROM skill WHERE SkillID = ?"
-            );
+            PreparedStatement statement = connection.prepareStatement(DELETE_SKILL);
             statement.setInt(1, skillId);
             statement.executeUpdate();
         } catch (SQLException throwables) {
@@ -120,9 +121,7 @@ public class SkillDaoImpl extends BaseDao<Skill> implements SkillDao {
         Connection connection = null;
         try {
             connection = connectionPool.getConnection();
-            PreparedStatement statement = connection.prepareStatement(
-                    "DELETE FROM skill WHERE ResumeID = ?"
-            );
+            PreparedStatement statement = connection.prepareStatement(DELETE_ALL_SKILLS);
             statement.setInt(1, resumeId);
             statement.executeUpdate();
         } catch (SQLException throwables) {
